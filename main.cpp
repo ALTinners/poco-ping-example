@@ -348,7 +348,8 @@ bool WssInterface::open()
             cerr << "Got" << endl;
             string address_string = "0.0.0.0";
             string port_string = to_string(port_);
-            SecureServerSocket svs(SocketAddress(address_string + ":" + port_string), 64, Poco::AutoPtr<Context>(ctx_));
+            // SecureServerSocket svs(SocketAddress(address_string + ":" + port_string), 64, Poco::AutoPtr<Context>(ctx_));
+            ServerSocket svs(SocketAddress(address_string + ":" + port_string), 64);
 
             HTTPServerParams* params = new HTTPServerParams;
             params->setTimeout(Poco::Timespan(3, 0));
@@ -394,15 +395,15 @@ bool WssInterface::is_open() const
 
 int main()
 {
-    auto ssl_context_ = new SSLContext{"your ssl cert here", "your ssl key here"};
+    // auto ssl_context_ = new SSLContext{"your ssl cert here", "your ssl key here"};
 
     auto wss_timeout_threshold = 3;
     auto wss_port = 15431;
 
     auto wss_interface_ = new WssInterface(
                 wss_port,
-                wss_timeout_threshold,
-                ssl_context_->get_poco_context());
+                wss_timeout_threshold, nullptr);
+                // ssl_context_->get_poco_context());
 
     wss_interface_->open();
 
